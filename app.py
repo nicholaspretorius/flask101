@@ -22,7 +22,9 @@ def resource(id):
         song = get_song(id)
         return json.dumps(song)
     if request.method == 'PUT':
-        pass
+        data = request.form
+        result = update_song(id, data['artist'], data['title'], data['rating'])
+        return jsonify(result)
     if request.method == 'DELETE':
         pass
 
@@ -45,7 +47,7 @@ def add_song(artist, title, rating):
 def get_all_songs():
     with sqlite3.connect('songs.db') as connection:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM songs ORDER BY id desc;")
+        cursor.execute("SELECT * FROM songs ORDER BY ID desc;")
         all_songs = cursor.fetchall()
         return all_songs
 
@@ -53,9 +55,20 @@ def get_all_songs():
 def get_song(id):
     with sqlite3.connect('songs.db') as connection:
         cursor = connection.cursor()
-        cursor.execute('SELECT * FROM songs WHERE id =?', (id,))
+        cursor.execute('SELECT * FROM songs WHERE ID = ?', (id,))
         song = cursor.fetchone()
         return song
+
+
+def update_song(id, artist, title, rating):
+    try:
+        with sqlite3.connect('songs.db') as connection:
+            connection.execute(
+                'UPDATE songs SET artist = ?, title = ?, rating = ? WHERE ID = ?;', (artist, title, rating, id,))
+            result = {'status': 1, 'message': 'song updated'}
+    except:
+        result = {'status': 0, 'message': 'error'}
+    return result
 
 
 if __name__ == '__main__':
