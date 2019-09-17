@@ -1,5 +1,7 @@
 ### Instructions.
 
+Based on [this](https://mherman.org/blog/flask-for-node-developers/) tutorial on 'Flask for Node Developers'.
+
 * `python3 -m venv env` set the virtual environment for Pyhton // v3.7.4 for this example
 * `source env/bin/activate` activates the venv
 * `deactivate` de-activates the venv
