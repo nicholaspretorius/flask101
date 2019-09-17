@@ -26,7 +26,8 @@ def resource(id):
         result = update_song(id, data['artist'], data['title'], data['rating'])
         return jsonify(result)
     if request.method == 'DELETE':
-        pass
+        result = delete_song(id)
+        return jsonify(result)
 
 
 # handlers
@@ -66,6 +67,16 @@ def update_song(id, artist, title, rating):
             connection.execute(
                 'UPDATE songs SET artist = ?, title = ?, rating = ? WHERE ID = ?;', (artist, title, rating, id,))
             result = {'status': 1, 'message': 'song updated'}
+    except:
+        result = {'status': 0, 'message': 'error'}
+    return result
+
+
+def delete_song(id):
+    try:
+        with sqlite3.connect('songs.db') as connection:
+            connection.execute('DELETE FROM songs WHERE ID = ?;', (id,))
+            result = {'status': 1, 'message': 'song deleted'}
     except:
         result = {'status': 0, 'message': 'error'}
     return result
